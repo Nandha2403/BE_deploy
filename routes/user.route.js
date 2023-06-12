@@ -12,14 +12,14 @@ userRouter.post("/register", async (req, res) => {
   try {
     bcrypt.hash(password, 5, async (err, hash) => {
       if (err) {
-        res.status(400).json({ err: err.message });
+        res.json({ err: err.message });
       }
       const user = new UserModel({ name, email, password: hash });
       await user.save();
+       res.json({ msg: "User has been Updated", user: req.body });
     });
-    res.status(200).json({ msg: "User has been Updated", user: req.body });
   } catch (err) {
-    res.status(400).json({ err: err.message });
+    res.json({ err: err.message });
   }
 });
 
@@ -35,16 +35,16 @@ userRouter.post("/login", async (req, res) => {
             { userID: user._id, user: user.name },
             process.env.secret
           );
-          res.status(200).json({ msg: "Logged In!!", token });
+          res.json({ msg: "Logged In!!", token });
         } else {
-          res.status(400).json({ msg: "Wrong Credentials" });
+          res.json({ msg: "Wrong Credentials" });
         }
       });
     } else {
-      res.status(200).json({ msg: "User does not exist" });
+      res.json({ msg: "User does not exist" });
     }
   } catch (error) {
-    res.status(400).json({ err: err.message });
+    res.json({ err: err.message });
   }
 });
 
